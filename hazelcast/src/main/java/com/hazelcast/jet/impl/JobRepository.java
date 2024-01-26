@@ -47,6 +47,7 @@ import com.hazelcast.query.Predicate;
 import com.hazelcast.spi.impl.NodeEngine;
 import com.hazelcast.spi.properties.ClusterProperty;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.github.pixee.security.ZipSecurity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -315,7 +316,7 @@ public class JobRepository {
      * Caller is responsible for closing stream.
      */
     public static void executeOnJarsInZIP(InputStream zip, Consumer<ZipInputStream> processor) throws IOException {
-        ZipInputStream zis = new ZipInputStream(zip);
+        ZipInputStream zis = ZipSecurity.createHardenedInputStream(zip);
         ZipEntry zipEntry;
 
         while ((zipEntry = zis.getNextEntry()) != null) {
