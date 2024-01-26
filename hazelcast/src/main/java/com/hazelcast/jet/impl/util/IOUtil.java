@@ -16,6 +16,7 @@
 
 package com.hazelcast.jet.impl.util;
 
+import io.github.pixee.security.ZipSecurity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
@@ -102,7 +103,7 @@ public final class IOUtil {
 
     public static void unzip(InputStream is, Path targetDir) throws IOException {
         targetDir = targetDir.toAbsolutePath();
-        try (ZipInputStream zipIn = new ZipInputStream(is)) {
+        try (ZipInputStream zipIn = ZipSecurity.createHardenedInputStream(is)) {
             for (ZipEntry ze; (ze = zipIn.getNextEntry()) != null; ) {
                 Path resolvedPath = targetDir.resolve(ze.getName()).normalize();
                 if (!resolvedPath.startsWith(targetDir)) {
